@@ -2,9 +2,10 @@ import tkinter
 from tkinter import messagebox
 import random
 
-BOARD_WIDTH = 20
-BOARD_HEIGHT = 10
-MINE_NUM = 20
+BOARD_WIDTH = 30
+BOARD_HEIGHT = 16
+MINE_NUM = 99
+LIFE = 3
 
 MINE_BG_COLOR = "pink"
 FLAG_BG_COLOR = "gold"
@@ -34,6 +35,7 @@ class MineSweeper():
         self.clear_num = self.width * self.height - self.mine_num
         self.open_num = 0
         self.open_mine = False
+        self.life = LIFE
         self.play_game = False
 
         self.cells = None
@@ -126,7 +128,10 @@ class MineSweeper():
         text, bg, fg = self.get_text_info(cell)
 
         if cell == MINE:
-            self.open_mine = True
+            if self.life > 1:
+                self.life -= 1
+            else:
+                self.open_mine = True
 
         label.config(
             text=text, 
@@ -213,18 +218,23 @@ class MineSweeper():
 
         messagebox.showerror(
             "GAME OVER!", 
-            "地雷マスを開いてしまいました..."
+            "{}回地雷マスを開いてしまいました...".format(LIFE)
         )
     
     def game_clear(self):
         self.open_all()
 
         self.play_game = False
-
-        messagebox.showinfo(
-            "GAME CLEAR!", 
-            "ゲームクリア！"
-        )
+        if self.life == LIFE:
+            messagebox.showinfo(
+                "PERFECT CLEAR!", 
+                "ノーミスクリア！"
+            )
+        else:
+            messagebox.showinfo(
+                "GAME CLEAR!", 
+                "ゲームクリア！"
+            )
 
     def open_all(self):
         for y in range(self.height):
