@@ -130,6 +130,10 @@ class MineSweeper():
         if cell == MINE:
             if self.life > 1:
                 self.life -= 1
+                messagebox.showwarning(
+                    "Life", 
+                    "残りライフ：{}/{}".format(self.life, LIFE)
+                )
             else:
                 self.open_mine = True
 
